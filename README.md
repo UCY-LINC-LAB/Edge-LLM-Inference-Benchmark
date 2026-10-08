@@ -63,18 +63,6 @@ The code is written to work when launched either from the repository root or fro
 
 `data/results.csv` contains self-hosted measurements for Orin, Server GPU, and Server CPU deployments. `data/results_chatgpt.csv` contains the GPT-4o cloud-reference run. The cloud reference is used for accuracy and latency comparison, but it is excluded from energy analysis because the API does not expose hardware-level power or utilization metrics.
 
-## Generated figures
-
-Running `scripts/generate_figures.py` or the notebook writes the following files under `figures`.
-
-```text
-energy_per_trial.png
-prefill_latency_per_token.png
-decode_latency_per_token.png
-orin_cloud_accuracy_size_duration.png
-pareto_frontiers.png
-```
-
 ## Citation
 
 If you use this repository, its datasets, or its analysis code, please cite the following paper:
