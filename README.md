@@ -1,115 +1,94 @@
-# LLM Edge-Continuum Inference Analysis
+# LLM edge continuum inference analysis
 
-This repository contains the analysis artifact for the paper **A Measurement
-Study of LLM Inference Trade-offs Across Edge-Continuum Hardware**. It compares
-LLM deployments across edge and server platforms using accuracy, model size,
-execution time, token latency, and system energy measurements.
+This repository contains the analysis artifact for the paper **A Measurement Study of LLM Inference Trade-offs Across Edge-Continuum Hardware**.
 
-The analysis is implemented in [`Analysis.ipynb`](Analysis.ipynb). The notebook
-loads the supplied CSV files, produces the plots shown below, and evaluates
-accuracy-latency Pareto frontiers under different server-side transfer-latency
-assumptions.
+The paper studies how model choice, quantization, execution platform, latency, memory footprint, energy, and streamed-token delivery overhead affect LLM deployment decisions across the edge continuum. The analysis uses two result files produced by the benchmarking pipeline and recreates the main post-processing steps used for the paper figures.
 
-## Repository Contents
+## What is included
 
 ```text
 .
-├── Analysis.ipynb
-├── README.md
-├── requirements.txt
 ├── data
 │   ├── results.csv
 │   └── results_chatgpt.csv
-└── figures
-    ├── energy_per_trial.png
-    ├── prefill_latency_per_token.png
-    ├── decode_latency_per_token.png
-    ├── orin_cloud_accuracy.png
-    ├── orin_cloud_model_size.png
-    ├── orin_cloud_duration.png
-    ├── pareto_frontier_0ms.png
-    ├── pareto_frontier_30ms.png
-    ├── pareto_frontier_60ms.png
-    ├── orin_cloud_accuracy_size_duration.png
-    └── pareto_frontiers.png
+├── figures
+├── analysis_utils.py
+├── CITATION.cff
+├── README.md
+└── requirements.txt
 ```
 
-## Data
+## Analysis overview
 
-- `data/results.csv` contains 36 self-hosted measurements covering Orin,
-  Server CPU, and Server GPU deployments.
-- `data/results_chatgpt.csv` contains the cloud-hosted ChatGPT reference
-  measurement used in the accuracy, model-size, and duration comparisons.
+The notebook focuses on four parts of the paper analysis.
 
-The cloud result is not included in the energy plots or self-hosted Pareto
-analysis because equivalent hardware-level measurements are not available.
+1. Loading and validating the self-hosted and cloud-reference measurements.
+2. Comparing accuracy, model size, latency, and energy across models and devices.
+3. Computing accuracy-latency Pareto frontiers for the self-hosted deployments.
+4. Recomputing the Pareto frontier after adding effective streamed-token delivery overhead to server-side deployments.
 
-## Analysis
+The main notebook is available at `notebooks/analysis.ipynb`. The helper functions are placed in `src/analysis_utils.py` so that the notebook stays readable and the same logic can be reused by scripts.
 
-The notebook performs the following steps:
+## Quick start
 
-1. Compares mean system energy per trial across devices and models.
-2. Compares prefill and decode latency per token.
-3. Compares Orin models with the cloud reference by accuracy, model size, and
-   overall duration.
-4. Finds non-dominated self-hosted configurations that minimize decode latency
-   while maximizing accuracy.
-5. Recomputes the Pareto frontier after adding 30 ms and 60 ms of effective
-   per-token transfer latency to server deployments.
-
-## Setup and Execution
-
-Run the notebook from the repository root because its data paths are relative
-to that directory.
+Create a Python environment and install the required packages.
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-jupyter lab Analysis.ipynb
 ```
 
-The notebook already contains executed outputs. Re-running all cells reproduces
-the analysis from the CSV files.
+Validate the input data.
 
-## Figures
+```bash
+python scripts/validate_data.py
+```
 
-The nine individual PNG files in `figures/` are exported from the
-corresponding outputs embedded in `Analysis.ipynb`. The two overview images
-assemble related notebook outputs side by side without changing their plots.
+Generate all figures from the command line.
 
-### Energy per trial
+```bash
+python scripts/generate_figures.py
+```
 
-![Energy per trial](figures/energy_per_trial.png)
+Open the documented notebook.
 
-### Prefill latency per token
+```bash
+jupyter lab notebooks/analysis.ipynb
+```
 
-![Prefill latency per token](figures/prefill_latency_per_token.png)
+The code is written to work when launched either from the repository root or from inside the `notebooks` directory.
 
-### Decode latency per token
+## Data files
 
-![Decode latency per token](figures/decode_latency_per_token.png)
+`data/results.csv` contains self-hosted measurements for Orin, Server GPU, and Server CPU deployments. `data/results_chatgpt.csv` contains the GPT-4o cloud-reference run. The cloud reference is used for accuracy and latency comparison, but it is excluded from energy analysis because the API does not expose hardware-level power or utilization metrics.
 
-### Orin and cloud comparison
+## Generated figures
 
-![Accuracy, model size, and duration comparison](figures/orin_cloud_accuracy_size_duration.png)
+Running `scripts/generate_figures.py` or the notebook writes the following files under `figures`.
 
-The individual panels are also available as
-`orin_cloud_accuracy.png`, `orin_cloud_model_size.png`, and
-`orin_cloud_duration.png`.
+```text
+energy_per_trial.png
+prefill_latency_per_token.png
+decode_latency_per_token.png
+orin_cloud_accuracy_size_duration.png
+pareto_frontiers.png
+```
 
-### Accuracy-latency Pareto frontiers
+## Citation
 
-![Pareto frontiers for 0 ms, 30 ms, and 60 ms transfer latency](figures/pareto_frontiers.png)
+If you use this repository, its datasets, or its analysis code, please cite the following paper:
 
-The individual scenarios are also available as `pareto_frontier_0ms.png`,
-`pareto_frontier_30ms.png`, and `pareto_frontier_60ms.png`.
+```bibtex
+@inproceedings{khatib2026measurement,
+  title     = {A Measurement Study of LLM Inference Trade-offs Across Edge-Continuum Hardware},
+  author    = {Khatib, Maysam and Symeonides, Moysis and Trihinas, Demetris and Pallis, George and Dikaiakos, Marios D.},
+  booktitle = {Proceedings of the 16th International Conference on Web Intelligence, Mining and Semantics (WIMS)},
+  year      = {2026}
+}
+```
 
-## Reproducibility Notes
+## License
 
-- Accuracy is displayed as a percentage in the comparison and Pareto plots.
-- Energy is aggregated by device and model and converted from joules to
-  kilojoules.
-- Lower latency and higher accuracy are preferred in the Pareto analysis.
-- The 30 ms and 60 ms sensitivity scenarios add transfer latency only to
-  Server CPU and Server GPU measurements.
+This repository is licensed under the Apache License, Version 2.0.
+See the LICENSE file for details.
