@@ -1,4 +1,4 @@
-# LLM edge continuum inference analysis
+# A Measurement Study of LLM Inference Trade-offs Across Edge-Continuum Hardware
 
 This repository contains the analysis artifact for the paper **A Measurement Study of LLM Inference Trade-offs Across Edge-Continuum Hardware**.
 
