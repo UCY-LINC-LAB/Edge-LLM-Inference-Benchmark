@@ -80,7 +80,7 @@ pareto_frontiers.png
 If you use this repository, its datasets, or its analysis code, please cite the following paper:
 
 ```bibtex
-@inproceedings{khatib2026measurement,
+@inproceedings{khatib2026WIMS,
   title     = {A Measurement Study of LLM Inference Trade-offs Across Edge-Continuum Hardware},
   author    = {Khatib, Maysam and Symeonides, Moysis and Trihinas, Demetris and Pallis, George and Dikaiakos, Marios D.},
   booktitle = {Proceedings of the 16th International Conference on Web Intelligence, Mining and Semantics (WIMS)},
