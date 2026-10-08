@@ -12,8 +12,7 @@ The paper studies how model choice, quantization, execution platform, latency, m
 │   ├── results.csv
 │   └── results_chatgpt.csv
 ├── figures
-├── analysis_utils.py
-├── CITATION.cff
+├── Analysis.ipynb
 ├── README.md
 └── requirements.txt
 ```
@@ -27,7 +26,7 @@ The notebook focuses on four parts of the paper analysis.
 3. Computing accuracy-latency Pareto frontiers for the self-hosted deployments.
 4. Recomputing the Pareto frontier after adding effective streamed-token delivery overhead to server-side deployments.
 
-The main notebook is available at `notebooks/analysis.ipynb`. The helper functions are placed in `src/analysis_utils.py` so that the notebook stays readable and the same logic can be reused by scripts.
+The main notebook is available at `Analysis.ipynb`.
 
 ## Quick start
 
@@ -39,25 +38,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Validate the input data.
-
-```bash
-python scripts/validate_data.py
-```
-
-Generate all figures from the command line.
-
-```bash
-python scripts/generate_figures.py
-```
-
 Open the documented notebook.
 
 ```bash
-jupyter lab notebooks/analysis.ipynb
+jupyter lab Analysis.ipynb
 ```
 
-The code is written to work when launched either from the repository root or from inside the `notebooks` directory.
+The code is written to work when launched either from the repository root.
 
 ## Data files
 
